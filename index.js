@@ -2,7 +2,6 @@
 
 import chalk from 'chalk'
 import fs from 'fs'
-// import path from 'path'
 
 async function getFile(filePath) {
   try {
