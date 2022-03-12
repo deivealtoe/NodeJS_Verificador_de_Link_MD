@@ -2,14 +2,12 @@
 
 import chalk from 'chalk'
 import fs from 'fs'
-import path from 'path'
-
-const filePath = path.join(path.resolve(), 'files', 'texto_01.md')
+// import path from 'path'
 
 async function getFile(filePath) {
   try {
     const text = await fs.promises.readFile(filePath, 'utf-8')
-    console.log(chalk.green(text))
+    return extractLinks(text)
   } catch (err) {
     showError(err)
   }
@@ -20,14 +18,18 @@ function showError(err) {
 }
 
 function extractLinks(text) {
-  const regex = /\[([^]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm
-  const extractedLinks = text.match(regex)
-  console.log(extractedLinks)
+  const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm
+
+  const arrayResults = []
+  let temp
+
+  while ((temp = regex.exec(text)) != null) {
+    arrayResults.push({
+      [temp[1]]: temp[2]
+    })
+  }
+  
+  return arrayResults.length === 0 ? 'Não há links' : arrayResults
 }
 
-getFile(filePath)
-extractLinks(getFile(filePath))
-
-// \[[^]]*\]
-// \(https?:\/\/[^$#\s].[^\s]*\)
-// \[([^]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)
+export default getFile
